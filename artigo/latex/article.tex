@@ -1,0 +1,197 @@
+\documentclass[12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[a4paper, left=3cm, right=2cm, top=3cm, bottom=2cm]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[toc]{glossaries}
+\usepackage{authblk}
+\usepackage{cite}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{relsize}
+\usepackage{setspace}
+\usepackage{subcaption}
+\usepackage{verbatimbox}
+\usepackage[english, portuguese]{babel}
+    \addto\captionsportuguese{\renewcommand*\bibname{Referências}}
+    \addto\captionsportuguese{\renewcommand*\contentsname{Sumário}}
+
+\newcommand\myshade{85}
+\newcommand{\pprime}{\ensuremath{^{\prime}}}
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\renewcommand\Authsep{, }
+\renewcommand\Authand{, }
+\renewcommand\Authands{, e }
+\providecommand{\keywords}[1]{%
+  \small
+  \textbf{\textit{\iflanguage{english}{Keywords}{Palavras-chave} ---}} #1%
+}
+
+\hypersetup{
+    pdftitle   = {Controle de acesso baseado em política para aplicações de Fog e Edge Computing em redes IoT},
+    pdfauthor  = {Pedro Santi Binotto},
+    pdfsubject = {Resumo em Português},
+    linkcolor  = black,
+    citecolor  = black,
+    urlcolor   = black,
+    colorlinks = true,
+    filecolor  = black,
+    linktoc    = page
+}%
+
+\newglossaryentry{iot} {
+  name={IoT},
+  description={\textit{Internet of Things} (\textit{Internet das Coisas}) é a abstração conceitual referente à
+  aproximação e integração entre objetos físicos e elementos da vida cotidiana e os recursos digitais disponibilizados
+  pela rede global de comutadores \cite{mattern2010}. O termo é frequentemente empregado em discussões tratando da automação
+  ``computadorização'' de aspectos físicos do mundo moderno, como \textit{Smart Cities}, \textit{Smart
+  Homes}/\textit{Home Automation}, etc..
+  }
+}
+
+\newglossaryentry{wsan} {
+  name={WSAN},
+  description={
+    \textit{Wireless Sensor and Actuator Network}: redes de dispositivos \textit{microeletrônicos}, tipicamente pequenos,
+    de baixo custo e baixo consumo energético, que realizam e comunicam medições através de sensores embarcados \cite{akyildiz2002}.
+  }
+}
+
+\newglossaryentry{fog} {
+  name={Fog Computing},
+  description={é um modelo de infraestrutura, processamento e comunicação
+  computacional distribuído e descentralizado que visa oferecer facilidades e serviços que seriam tipicamente possibilitados por
+  \textit{Data Centers} tradicionais (isto é, centralizados), aproximando o processamento de informação dos
+  dispositivos geradores (\gls{wsan}) de dados e reduzindo o uso de banda para transporte de tais dados \cite{bonomi2012}.
+  }
+}
+
+\title{Controle de acesso baseado em política para aplicações de \textit{Fog} e \textit{Edge Computing} em redes IoT}
+\author[1]{Pedro Santi Binotto [20200634]\thanks{\texttt{pedro.binotto@grad.ufsc.br}}}
+\author[1]{Prof. Carlos Becker Westphal \thanks{\texttt{carlosbwestphall@gmail.com}}}
+\date{\today}
+\affil[1]{Departamento de Informática e Estatística, Centro Tecnológico \protect\\ Universidade Federal de Santa Catarina}
+
+\makeglossaries
+
+\begin{document}
+\begin{titlepage}
+\selectlanguage{portuguese} 
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+  Em anos recentes, tem-se evidenciado um crescente interesse sobre a adoção de \textit{\gls{fog}} em
+  cenários de computação distribuída e redes \gls{wsan}. Esta mudança de paradigma --- do tradicional modelo
+  centralizado de \textit{Cloud Computing} para sistemas \textit{Edge} e \textit{Fog} --- salienta a importância de manter
+  fundamentos sólidos para o desenvolvimento de mecanismos de segurança voltados à integridade e confiabilidade das redes
+  de dispositivos \gls{iot} à medida que essas soluções extrapolam o contexto industrial e passam a ser implantadas em
+  demais áreas críticas para o funcionamento da sociedade moderna. Este artigo propõe a possibilidade
+  da aplicação de estratégias de proteção testadas e aprovadas em diversos domínios clássicos da computação distribuída
+  para soluções \textit{Fog} e \textit{Edge}, demonstrando como estas podem ser implantadas de forma eficiente para
+  manter uma rede coesa, íntegra e segura.
+\end{abstract}
+
+\selectlanguage{english} 
+\begin{abstract}
+  In recent years, a growing interest to the adoption to Edge and \gls{fog} in the domain of distributed computing has
+  has come to the foreground. This paradigm shift --- from the classic, centralized solution of Cloud-based systems to
+  Fog and Edge models --- highlights the need for a solid conceptual foundation for the development and implementation
+  of security systems in \gls{iot} networks, as such systems have become increasingly common not only in industrial
+  contexts but also in other critical domains essential to modern society. This paper proposes the application of
+  established protection strategies from classical distributed computing domains to Edge and \gls{fog} environments to
+  ensure the integrity and soundness of this type of network.
+\end{abstract}
+
+\selectlanguage{portuguese}
+
+\keywords{\textit{Fog Computing}, \textit{Fog-Node Security}, IoT, PBAC, Segurança de Redes WSAN}
+
+\end{titlepage}
+
+\tableofcontents
+
+\printglossary[title=Glossário, toctitle=Glossário]
+
+\section{Introdução}
+\subsection{Motivação e Justificativas}
+\subsubsection{Desafios e Obstáculos para a implantação de redes \textit{Fog}}
+\paragraph{}
+Desde a introdução inicial do conceito pela CISCO em 2012 \cite{bonomi2012}, o interesse em redes de \gls{fog} tem
+sido um tópico de interesse crescente para pesquisadores, firmas de desenvolvimento de software, companhias do setor
+industrial e iniciativas públicas e privadas com foco no progresso digital e automação de linhas de produção, meios de
+transporte urbanos, veículos autônomos, etc. \cite{srirama2024}. 
+
+A taxa de adoção de redes desta espécie, no entanto, não corresponde ao crescente nível de interesse na
+aplicação da tecnologia descentralizada --- para a implantação efetiva de dispositivos na configuração \textit{Fog} e
+\textit{Edge}, existem desafios econômicos, logísticos, e, como será explorado neste artigo, também obstáculos técnicos
+à serem solucionados \cite{srirama2024}.
+
+\subsubsection{Riscos de segurança na introdução de \textit{Fogs} em soluções distribuídas}
+\paragraph{}
+A característica definitiva que diferencia o modelo \textit{Fog} da computação em \textit{Cloud} tradicional é a aproximação
+(física assim como topológica) do processamento de dados dos dispositivos de campo (\gls{wsan}). Desta forma, uma maior
+parcela do trabalho computacional é realizada ``nas bordas'' (\textit{Edge}) da rede, e, consequentemente, a integridade
+da rede como um todo também é atrelada à integridade da infraestrutura da rede local.
+
+Por este motivo, redes de \gls{fog} são mais suscetíveis à alguns tipos de ameaças do que implantações \textit{Cloud}
+tradicionais \cite{alhazmi2019,srirama2024,khan2017}:
+\begin{itemize}
+  \item Critérios fracos para autenticação de nós (\textit{nodes}) na rede;
+  \item Propensão à ataques físicos (\textit{tampering, jamming}) sobre os dispositivos \gls{iot};
+  \item Medidas de segurança e criptografia reduzidas como consequência de  fatores físicos dados pelo hardware limitado
+    dos dispositivos que compõem a rede;
+  \item Agravando a maior dependência sobre infraestrutura local, também sofre de uma maior superfície (maior número de equipamentos)
+    elegível para ataques e acessos maliciosos;
+\end{itemize}
+
+Assim, torna-se necessária a análise de alternativas para desenvolver e reforçar métodos e estratégias para garantir a
+segurança e integridade destas redes.
+
+\subsection{Objetivos Gerais e Específicos}
+\subsubsection{}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\subsection{Organização do Artigo}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\section{Conceitos básicos}
+\subsection{Autenticação, Controle de Acesso, Privacidade e PMAC}
+\subsubsection{Fundamentos e \textit{Framework} Conceitual}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\subsection{\textit{TCB}, \textit{TEE} e \textit{Fog-Node Security}}
+\subsubsection{\textit{CIA}}
+\subsubsection{\textit{Chain-of-trust}}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\section{Trabalhos Correlatos}
+\subsection{Primeiro trabalho correlato}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\subsection{Segundo trabalho correlato}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\subsection{Aspectos relevantes}
+Conteúdo de parágrafo.
+
+\subsection{Problemas existentes}
+Conteúdo de parágrafo.
+
+\subsection{Soluções Possíveis}
+Conteúdo de parágrafo.
+
+\newpage
+\section{Bibliografia}
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}
+
