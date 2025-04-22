@@ -20,6 +20,8 @@
 \newcommand\myshade{85}
 \newcommand{\pprime}{\ensuremath{^{\prime}}}
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\newcommand{\numberedref}[1]{\ref{#1} --- \nameref{#1}}
 \renewcommand\Authsep{, }
 \renewcommand\Authand{, }
 \renewcommand\Authands{, e }
@@ -44,7 +46,7 @@
   name={IoT},
   description={\textit{Internet of Things} (\textit{Internet das Coisas}) é a abstração conceitual referente à
   aproximação e integração entre objetos físicos e elementos da vida cotidiana e os recursos digitais disponibilizados
-  pela rede global de comutadores \cite{mattern2010}. O termo é frequentemente empregado em discussões tratando da automação
+  pela rede global de computadores \cite{mattern2010}. O termo é frequentemente empregado em discussões tratando da automação
   ``computadorização'' de aspectos físicos do mundo moderno, como \textit{Smart Cities}, \textit{Smart
   Homes}/\textit{Home Automation}, etc..
   }
@@ -114,7 +116,7 @@
 
 \printglossary[title=Glossário, toctitle=Glossário]
 
-\section{Introdução}
+\section{Introdução} \label{sec:intro}
 \subsection{Motivação e Justificativas}
 \subsubsection{Desafios e Obstáculos para a implantação de redes \textit{Fog}}
 \paragraph{}
@@ -150,15 +152,27 @@ Assim, torna-se necessária a análise de alternativas para desenvolver e refor�
 segurança e integridade destas redes.
 
 \subsection{Objetivos Gerais e Específicos}
-\subsubsection{}
+\subsubsection{Um \textit{Framework} pragmático para a definição de confiabilidade}
+\paragraph{}
+Conteúdo de parágrafo.
+
+\subsubsection{Uma proposta de aplicação conceitual de PBAC para redes \textit{Fog}}
 \paragraph{}
 Conteúdo de parágrafo.
 
 \subsection{Organização do Artigo}
 \paragraph{}
-Conteúdo de parágrafo.
+Este artigo está organizado da seguinte maneira:
+\begin{itemize}
+  \item \numberedref{sec:intro}: Apresenta o contexto inicial \dots;
+  \item \numberedref{sec:concepts}: Introduz os componentes principais \dots;
+  \item \numberedref{sec:correlated}: Apresenta trabalhos correlatos \dots;
+  \item \numberedref{sec:aspects}: Só Deus sabe \dots;
+  \item \numberedref{sec:problems}: Novamente não tenho certeza do que esse cara quer \dots;
+  \item \numberedref{sec:solutions}: Idem \dots;
+\end{itemize}
 
-\section{Conceitos básicos}
+\section{Conceitos básicos} \label{sec:concepts}
 \subsection{Autenticação, Controle de Acesso, Privacidade e PMAC}
 \subsubsection{Fundamentos e \textit{Framework} Conceitual}
 \paragraph{}
@@ -170,7 +184,7 @@ Conteúdo de parágrafo.
 \paragraph{}
 Conteúdo de parágrafo.
 
-\section{Trabalhos Correlatos}
+\section{Trabalhos Correlatos} \label{sec:correlated}
 \subsection{Primeiro trabalho correlato}
 \paragraph{}
 Conteúdo de parágrafo.
@@ -179,13 +193,13 @@ Conteúdo de parágrafo.
 \paragraph{}
 Conteúdo de parágrafo.
 
-\subsection{Aspectos relevantes}
+\section{Aspectos relevantes} \label{sec:aspects}
 Conteúdo de parágrafo.
 
-\subsection{Problemas existentes}
+\section{Problemas existentes} \label{sec:problems}
 Conteúdo de parágrafo.
 
-\subsection{Soluções Possíveis}
+\section{Soluções Possíveis} \label{sec:solutions}
 Conteúdo de parágrafo.
 
 \newpage

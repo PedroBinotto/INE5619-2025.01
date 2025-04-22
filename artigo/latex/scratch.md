@@ -39,6 +39,6 @@
 - Trust **must** be rooted in hardware:
     - Established at _power-on_;
     - Extends chain-of-trust;
-    - Firmware Hypervisor on bare-metal;
+    - Firmware Hypervisor or bare-metal;
 
 ---
