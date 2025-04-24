@@ -1,0 +1,313 @@
+\section{Anexos}\label{sec:anexos}
+\subsection{Configuração do \textit{Zabbix}/Docker-compose}\label{sec:yaml}
+\texttt{docker-compose.yaml}
+\begin{lstlisting}
+version: '3.5'
+services:
+  zabbix-server:
+    container\_name: "zabbix-server"
+    image: zabbix/zabbix-server-pgsql:alpine-trunk
+    restart: always
+    ports:
+      - 10051:10051
+    networks:
+      - zabbix7
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro 
+    environment:
+      ZBX\_CACHESIZE: 4096M
+      ZBX\_HISTORYCACHESIZE: 1024M
+      ZBX\_HISTORYINDEXCACHESIZE: 1024M
+      ZBX\_TRENDCACHESIZE: 1024M
+      ZBX\_VALUECACHESIZE: 1024M
+      DB\_SERVER\_HOST: "192.168.0.19" 
+      DB\_PORT: 5432
+      POSTGRES\_USER: "zabbix"
+      POSTGRES\_PASSWORD: "zabbix"
+      POSTGRES\_DB: "zabbix\_db"
+    stop\_grace\_period: 30s
+    labels:
+      com.zabbix.description: "Zabbix server with PostgreSQL database support"
+      com.zabbix.company: "Zabbix LLC"
+      com.zabbix.component: "zabbix-server"
+      com.zabbix.dbtype: "pgsql"
+      com.zabbix.os: "alpine"
+
+  zabbix-web-nginx-pgsql:
+    container\_name: "zabbix-web"
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-trunk
+    restart: always
+    ports:
+      - 8080:8080
+      - 8443:8443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./cert/:/usr/share/zabbix/conf/certs/:ro
+    networks:
+      - zabbix7
+    environment:
+      DB\_SERVER\_HOST: "192.168.0.19"
+      DB\_PORT: 5432
+      POSTGRES\_USER: "zabbix"
+      POSTGRES\_PASSWORD: "zabbix"
+      POSTGRES\_DB: "zabbix\_db"
+      ZBX\_MEMORYLIMIT: "1024M"
+    depends\_on:
+      - zabbix-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start\_period: 30s
+    stop\_grace\_period: 10s
+    labels:
+      com.zabbix.description: "Zabbix frontend on Nginx web-server with PostgreSQL database support"
+      com.zabbix.company: "Zabbix LLC"
+      com.zabbix.component: "zabbix-frontend"
+      com.zabbix.webserver: "nginx"
+      com.zabbix.dbtype: "pgsql"
+      com.zabbix.os: "alpine"
+
+  zabbix-db-agent2:
+    container\_name: "zabbix-agent2"
+    image: zabbix/zabbix-agent2:alpine-trunk
+    user: root
+    depends\_on:
+      - zabbix-server
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /run/docker.sock:/var/run/docker.sock
+    environment:
+      ZBX\_HOSTNAME: "zabbix7"
+      ZBX\_SERVER\_HOST: "127.0.0.1"
+      ZBX\_PASSIVE\_ALLOW: "true"
+      ZBX\_PASSIVESERVERS: "192.168.0.19"
+      ZBX\_ENABLEREMOTECOMMANDS: "1"
+      ZBX\_ACTIVE\_ALLOW: "false"
+      ZBX\_DEBUGLEVEL: "3"
+    privileged: true
+    pid: "host"
+    ports:
+      - 10050:10050
+      - 31999:31999 
+    networks:
+      - zabbix7
+    stop\_grace\_period: 5s
+   
+  db:
+    container\_name: "zabbix\_db"
+    image: postgres:15.6-bullseye
+    restart: always
+    volumes:
+     - zbx\_db15:/var/lib/postgresql/data
+    ports:
+     - 5432:5432
+    networks:
+     - zabbix7
+    environment:
+     POSTGRES\_USER: "zabbix"
+     POSTGRES\_PASSWORD: "zabbix"
+     POSTGRES\_DB: "zabbix\_db"
+
+networks:
+  zabbix7:
+   driver: bridge
+volumes:
+  zbx\_db15:
+\end{lstlisting}
+
+\subsection{Contrato SLA}\label{sec:contract}
+
+\texttt{contract.xml}
+\begin{lstlisting}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<sla>
+  <title>SERVICE LEVEL AGREEMENT CONTRACT</title>
+  <section>
+    6.1 Overview
+    <clause>
+      Clause 1.
+      <description>
+        This contract aims to establish a Service Level Agreement between the provider and the client. All clauses must be followed and respected. In case of non-compliance, both parties are subject to penalties.
+      </description>
+    </clause>
+    <clause>
+      Clause 2.
+      <description>
+        This contract is valid for 24 months from the effective start date defined at the end of the agreement.
+      </description>
+    </clause>
+    <clause>
+      Clause 3.
+      <description>
+        This agreement defines the services to be provided by the provider, including the required performance metrics that must be respected to maintain the quality level expected by the client. In case of breach, penalties are foreseen.
+      </description>
+    </clause>
+  </section>
+  <section>
+    6.2 Executive Summary
+    <clause>
+      Clause 4.
+      <description>
+        The responsibility for providing network management and administration services lies with the service provider, hereinafter referred to as "provider".
+      </description>
+    </clause>
+    <clause>
+      Clause 5.
+      <description>
+        The client will be referred to as "client" throughout this document.
+      </description>
+    </clause>
+    <clause>
+      Clause 6.
+      <description>
+        This Service Level Agreement aims to ensure the commitments and elements defined in this contract are delivered to the client by the provider. The services covered by this agreement include:
+        <description_item>Security</description_item>
+        <description_item>Availability of network resources</description_item>
+        <description_item>Network resource administration and management</description_item>
+        <description_item>Transparency</description_item>
+        <description_item>Technical support and maintenance</description_item>
+      </description>
+    </clause>
+    <clause>
+      Clause 7.
+      <description>
+        Network Operations Center (NOC) operating hours:
+        <description_item>From 7:00 to 23:00 on business days</description_item>
+        <description_item>From 8:00 to 20:00 on weekends and holidays</description_item>
+        The support team may be contacted through:
+        <description_item>Phone: +00 (00) 0000-0000</description_item>
+        <description_item>Email: support@sla-provider.com</description_item>
+      </description>
+    </clause>
+    <clause>
+      Clause 8.
+      <description>
+        In the event of emergency repairs (defined as high priority), the provider is required to respond within 12 hours from the time of the incident report. Non-compliance with this clause will result in a penalty of 5,500 DOL.
+      </description>
+    </clause>
+    <clause>
+      Clause 9.
+      <description>
+        The provider must notify the client via registered email about all scheduled maintenance operations that may cause service unavailability or impact.
+      </description>
+    </clause>
+    <clause>
+      Clause 10.
+      <description>
+        Monthly Reports – The provider must conduct monthly measurements and send availability reports to the client. Reports must include:
+        <description_item>Resource availability statistics</description_item>
+        <description_item>Statistics of resources allocated to the client, if any</description_item>
+        <description_item>Scheduled maintenance for the month</description_item>
+      </description>
+    </clause>
+  </section>
+  <section>
+    6.3 Performance Parameters and Metrics
+    <clause>
+      Clause 11.
+      <description>
+        A maintenance and repair window of 3 hours is reserved during low-traffic periods with prior notice to the client.
+      </description>
+    </clause>
+    <clause>
+      Clause 12.
+      <description>
+        External network access must maintain 100% availability. The data processing center responsible for routing to the internet backbone must be available at all times via the main route or alternate links.
+      </description>
+    </clause>
+  </section>
+  <section>
+    6.4 Scope of Service
+    <clause>
+      Clause 13.
+      <description>
+        The following items and thresholds must be respected:
+        <description_item>The number of threads on workstations must not exceed 2000</description_item>
+        <description_item>The network interface of the workstation host must always be operational</description_item>
+        <description_item>The management host must not have zero uptime during the monitoring period</description_item>
+        <description_item>The number of available inodes must not drop below 90%</description_item>
+        <description_item>The number of active connections on port 443 of the Notebook host must not exceed 10</description_item>
+      </description>
+    </clause>
+  </section>
+  <section>
+    6.5 Penalties
+    <clause>
+      Clause 14.
+      <description>
+        This clause defines the penalties applied to the provider in case of breach:
+        <description_item>For any breach of clause, the responsible party must pay a fine of 1,500 DOL to the affected party</description_item>
+        <description_item>For non-compliance with Item 2 of Clause 13, the provider must pay 15,000 DOL to the client</description_item>
+        <description_item>For breach of two or more clauses, the client has the right to review the contract. If more than 12 months have passed since the contract start date, the client may request termination</description_item>
+      </description>
+    </clause>
+  </section>
+  <section>
+    6.6 Mutual Responsibilities
+    <clause>
+      Clause 15.
+      <description>
+        This agreement is valid from the effective date defined below. Upon contract termination or after 12 months, a revision by both parties is required.
+      </description>
+    </clause>
+    <clause>
+      Clause 16.
+      <description>
+        Contract revision shall be conducted in a meeting where both parties decide whether to renew the agreement for the next period. After the decision, both parties have 30 days to formally submit clause changes.
+      </description>
+    </clause>
+    <clause>
+      Clause 17.
+      <description>
+        The provider is responsible for fulfilling all services and guarantees defined in this agreement, covering the defined hours and respecting the established metrics.
+      </description>
+    </clause>
+    <clause>
+      Clause 18.
+      <description>
+        The client is responsible for complying with the terms of this agreement, respecting service coverage hours, and providing required information resulting from the service usage. The client is also responsible for the monthly payment of 2,000 DOL to the provider.
+      </description>
+    </clause>
+  </section>
+</sla>
+\end{lstlisting}
+
+\subsection{Schema de validação XML para contrato}\label{sec:schema}
+
+\texttt{schema.xml}
+\begin{lstlisting}
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="sla">
+    <xs:complexType>
+       <xs:sequence>
+        <xs:element type="xs:string" name="title"/>
+        <xs:element name="section" maxOccurs="unbounded" minOccurs="0"> 
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element name="clause" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType mixed="true">
+                  <xs:sequence>
+                    <xs:element name="description">
+                      <xs:complexType mixed="true">
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="description_item" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="signatures"> </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+\end{lstlisting}
