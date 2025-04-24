@@ -1,8 +1,7 @@
 \documentclass[12pt]{article}
 
 \usepackage[T1]{fontenc}
-\usepackage[a4paper, left=3cm, right=2cm, top=3cm, bottom=2cm]{geometry}
-\usepackage[dvipsnames]{xcolor}
+\usepackage[a4paper, left=3cm, right=2cm, top=3cm, bottom=2cm]{geometry} \usepackage[dvipsnames]{xcolor}
 \usepackage[toc]{glossaries}
 \usepackage{authblk}
 \usepackage{cite}
@@ -21,7 +20,6 @@
 \newcommand{\pprime}{\ensuremath{^{\prime}}}
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 
-\newcommand{\numberedref}[1]{\ref{#1} --- \nameref{#1}}
 \renewcommand\Authsep{, }
 \renewcommand\Authand{, }
 \renewcommand\Authands{, e }
@@ -33,7 +31,7 @@
 \hypersetup{
     pdftitle   = {Controle de acesso baseado em política para aplicações de Fog e Edge Computing em redes IoT},
     pdfauthor  = {Pedro Santi Binotto},
-    pdfsubject = {Resumo em Português},
+    pdfsubject = {Em anos recentes, tem-se evidenciado um crescente interesse sobre a adoção de Fog Computing em cenários de computação distribuída e redes WSAN. Esta mu- dança de paradigma — do tradicional modelo centralizado de Cloud Computing para sistemas Edge e Fog — salienta a importância de manter fundamentos sólidos para o desenvolvimento de mecanismos de segurança voltados à integridade e con- fiabilidade das redes de dispositivos IoT à medida que essas soluções extrapolam o contexto industrial e passam a ser implantadas em demais áreas críticas para o fun- cionamento da sociedade moderna. Este artigo propõe a possibilidade da aplicação de estratégias de proteção testadas e aprovadas em diversos domínios clássicos da computação distribuída para soluções Fog e Edge, demonstrando como estas podem ser implantadas de forma eficiente para manter uma rede coesa, íntegra e segura.},
     linkcolor  = black,
     citecolor  = black,
     urlcolor   = black,
@@ -156,7 +154,7 @@ segurança e integridade destas redes.
 \paragraph{}
 Conteúdo de parágrafo.
 
-\subsubsection{Uma proposta de aplicação conceitual de PBAC para redes \textit{Fog}}
+\subsubsection{Proposta de aplicação conceitual de PBAC para redes \textit{Fog}}
 \paragraph{}
 Conteúdo de parágrafo.
 
@@ -164,12 +162,12 @@ Conteúdo de parágrafo.
 \paragraph{}
 Este artigo está organizado da seguinte maneira:
 \begin{itemize}
-  \item \numberedref{sec:intro}: Apresenta o contexto inicial \dots;
-  \item \numberedref{sec:concepts}: Introduz os componentes principais \dots;
-  \item \numberedref{sec:correlated}: Apresenta trabalhos correlatos \dots;
-  \item \numberedref{sec:aspects}: Só Deus sabe \dots;
-  \item \numberedref{sec:problems}: Novamente não tenho certeza do que esse cara quer \dots;
-  \item \numberedref{sec:solutions}: Idem \dots;
+  \item \nameref{sec:intro}: por fazer \dots;
+  \item \nameref{sec:concepts}: por fazer \dots;
+  \item \nameref{sec:correlated}: por fazer \dots;
+  \item \nameref{sec:aspects}: por fazer \dots;
+  \item \nameref{sec:problems}: por fazer \dots;
+  \item \nameref{sec:solutions}: por fazer \dots;
 \end{itemize}
 
 \section{Conceitos básicos} \label{sec:concepts}
